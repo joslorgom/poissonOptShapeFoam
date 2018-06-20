@@ -1,0 +1,151 @@
+/*---------------------------------------------------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  1.4                                   |
+|   \\  /    A nd           | Web:      http://www.openfoam.org               |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+
+// Field Dictionary
+
+FoamFile
+{
+    version         2.0;
+    format          ascii;
+    class           volScalarField;
+    object          Td;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+
+dimensions      [0 0 0 1 0 0 0];
+//dimensions	[0 0 0 0 0 0 0];
+
+internalField   #codeStream
+    {
+	codeInclude
+	#{
+	    #include "fvCFD.H"
+	#};
+
+	codeOptions
+	#{
+	    -I$(LIB_SRC)/finiteVolume/lnInclude \
+	    -I$(LIB_SRC)/meshTools/lnInclude
+	#};
+
+	codeLibs
+	#{
+	    -lmeshTools \
+	    -lfiniteVolume
+	 #};
+
+	code
+	#{
+	    const IOdictionary& d = static_cast<const IOdictionary&>(dict);
+	    const fvMesh& mesh = refCast<const fvMesh>(d.db());
+
+	    scalarField Td(mesh.nCells(), 0.);
+
+	    const scalar R1 = 0.3;
+	    const scalar R2 = 1;
+	    const scalar u1 = 0;
+	    const scalar u2 = 1;
+	    const scalar f = 0;
+	    const scalar c1 = ( u2 - u1 + f/4 * ( pow(R2, 2) - pow(R1, 2) ) ) / log( R2/R1 );
+	    const scalar c2 = 0.5 * ( u1 + u2 ) + f/8 * ( pow(R1, 2) + pow(R2, 2) ) - c1/2 * log( R1*R2 );
+
+	    forAll(Td, i)
+	    {
+		const scalar x = mesh.C()[i][0];
+		const scalar y = mesh.C()[i][1];
+		const scalar r = ::sqrt( pow(x, 2) + pow(y, 2) );
+
+		if(r<=0.3){Td[i] = 0;}
+		else{Td[i] = -f/4*pow(r, 2) + c1*log(r) + c2;}
+
+		//Td[i] = sin(constant::mathematical::pi*x)*sin(constant::mathematical::pi*y);
+		//Td[i] = sin(constant::mathematical::pi*x);
+	    }
+
+	    Td.writeEntry("", os);
+	#};
+
+    };
+
+boundaryField
+{
+
+    deformedWall        
+    {
+	type		fixedValue;
+	//value		5;
+	value		#codeStream
+    {
+	codeInclude
+	#{
+	    #include "fvCFD.H"
+	#};
+
+	codeOptions
+	#{
+	    -I$(LIB_SRC)/finiteVolume/lnInclude \
+	    -I$(LIB_SRC)/meshTools/lnInclude
+	#};
+
+	codeLibs
+	#{
+	    -lmeshTools \
+	    -lfiniteVolume
+	 #};
+
+	code
+	#{
+	    const IOdictionary& d = static_cast<const IOdictionary&>(dict.parent().parent());
+	    const fvMesh& mesh = refCast<const fvMesh>(d.db());
+	    const label id = mesh.boundary().findPatchID("deformedWall");
+	    const fvPatch& patch = mesh.boundary()[id];
+
+	    scalarField Td(patch.size(), 0.);
+
+	    const scalar R1 = 0.3;
+	    const scalar R2 = 1;
+	    const scalar u1 = 0;
+	    const scalar u2 = 1;
+	    const scalar f = 0;
+	    const scalar c1 = ( u2 - u1 + f/4 * ( pow(R2, 2) - pow(R1, 2) ) ) / log( R2/R1 );
+	    const scalar c2 = 0.5 * ( u1 + u2 ) + f/8 * ( pow(R1, 2) + pow(R2, 2) ) - c1/2 * log( R1*R2 );
+
+	    forAll(Td, i)
+	    {
+		const scalar x = patch.Cf()[i][0];
+		const scalar y = patch.Cf()[i][1];
+		const scalar r = ::sqrt( pow(x, 2) + pow(y, 2) );
+
+		if(r<=0.3){Td[i] = 0;}
+		else{Td[i] = -f/4*pow(r, 2) + c1*log(r) + c2;}
+
+		//Td[i] = sin(constant::mathematical::pi*x)*sin(constant::mathematical::pi*y);
+		//Td[i] = sin(constant::mathematical::pi*x);
+	    }
+
+	    Td.writeEntry("", os);
+	#};
+
+    };
+    }
+
+    outerWall        
+    {
+	type		fixedValue;
+	value		uniform 1;
+    }
+
+    backAndFront           
+    {
+        type            empty;
+    }
+}
+
+// ************************************************************************* //

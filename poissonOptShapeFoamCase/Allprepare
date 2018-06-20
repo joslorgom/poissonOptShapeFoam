@@ -1,0 +1,4 @@
+rm *.msh
+gmsh - plateWithHoleFine.geo
+gmshToFoam plateWithHole.msh
+changeDictionary
