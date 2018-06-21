@@ -174,7 +174,7 @@ The reference geometry to be optimized is an inner hole with boundary given by
 </p>
 
 <p align="center">
-  <img src="poissonOptShapeFoamCase/figs/fig1.png" width="400" height="300">
+  <img src="poissonOptShapeFoamCase/figs/fig1.png" width="400" height="340">
 </p>
 
 The target function <img src="https://latex.codecogs.com/gif.latex?u_d"> will be the analytical solution of the Poisson equation with the inner hole centered in the origin,
@@ -205,14 +205,11 @@ the cost function equals zero, thus it is an optimal solution. The steepest desc
 
 <p align="center">
   <img src="poissonOptShapeFoamCase/figs/fig2.png" width="400" height="300">
-</p>
-
-<p align="center">
   <img src="poissonOptShapeFoamCase/figs/fig3.png" width="400" height="300">
 </p>
 
 <p align="center">
-  <img src="poissonOptShapeFoamCase/figs/laplace_uniform.gif" width="400" height="300">
+  <img src="poissonOptShapeFoamCase/figs/laplace_uniform.gif" width="600" height="350">
 </p>
 
 ### Warning
@@ -236,3 +233,19 @@ in order to be able to execute
 ```
 
 ## References
+
+* O. Pironneau. _Optimal shape design for elliptic systems_. Springer Science & Business Media, 2012.
+* J Simon. _Diferenciación de problemas de contorno respecto del dominio_. Technical report, Universidad de Sevilla, Facultad de Matemáticas, Departamento de Análisis Matemático, 1989.
+
+Linear Elasticity mesh motion method:
+* Andrew A. Johnson and Tayfun E. Tezduyar. Mesh update strategies in parallel finite element computations of flow problems with moving boundaries and interfaces. _Computer methods in applied mechanics and engineering_, 119(1-2):73–94, 1994.
+* Thomas D. Economon, Francisco Palacios, and Juan J. Alonso. Unsteady continuous adjoint approach for aerodynamic design on dynamic meshes. _AIAA Journal_, 53(9):2437–2453, 2015.
+* George S. Eleftheriou and Guillaume Pierrot. Rigid motion mesh morpher: A novel approach for mesh deformation. In _OPT-i, An International Conference on Engineering and Applied Sciences Optimization_, Kos, Greece, pages 4–6, 2014.
+
+Solid Body Rotation (SBR) Stress method:
+* Richard P. Dwight. Robust mesh deformation using the linear elasticity equations. In _Computational fluid dynamics 2006_, pages 401–406. Springer, 2009.
+
+Laplacian Smoothing:
+* Peter Hansbo. Generalized laplacian smoothing of unstructured grids. _International Journal for Numerical Methods in Biomedical Engineering_, 11(5):455–464, 1995.
+* Rainald Löhner and Chi Yang. Improved ale mesh velocities for moving bodies. _Communications in numerical methods in engineering_, 12(10):599–608, 1996.
+* Hrvoje Jasak and Zeljko Tukovic. Automatic mesh motion for the unstructured finite volume method. _Transactions of FAMENA_, 30(2):1–20, 2006.
